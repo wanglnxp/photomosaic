@@ -4,8 +4,12 @@ PhotoMosaic
 *PhotoMosaic* is an image effect for Unity, which generates a photographic
 mosaic from a screen image.
 
-![gif](http://38.media.tumblr.com/88e4e10dcd166087b80b091f280d391e/tumblr_nwdakkQPyO1qio469o1_400.gif)
-![gif](http://38.media.tumblr.com/ac0fb57dc9bdea788cf61b82914458c9/tumblr_nwf54jYKEo1qio469o1_400.gif)
+
+Note
+----------
+
+Modifying the original project from Keijiro Takahashi
+
 
 How To Use
 ----------
