@@ -9,6 +9,7 @@ Note
 ----------
 
 Modifying the original project from Keijiro Takahashi
+You can download from instgram photo to replace mosaic effect
 
 
 How To Use
@@ -19,11 +20,6 @@ How To Use
 - Update the album texture (Assets -> PhotoMosaic -> Update Album).
 - Add the PhotoMosaic script to the main camera.
 
-Acknowledgement
----------------
-
-All photos used in the test scene are brought from [pdphoto.org]
-(http://pdphoto.org). These photos are placed in the public domain.
 
 License
 -------
