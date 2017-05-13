@@ -24,6 +24,8 @@
 using UnityEngine;
 using UnityEditor;
 using System.IO;
+using System.Collections;
+using System.Collections.Generic;
 
 namespace PhotoMosaicEditor
 {
@@ -109,7 +111,7 @@ namespace PhotoMosaicEditor
         }
 
         [MenuItem("Assets/PhotoMosaic/Update Album")]
-        public static void UpdateAlbum()
+		public static void UpdateAlbum()
         {
             var photos = LoadPhotos();
             var rowCount = (photos.Length + _photosPerRow - 1) / _photosPerRow;

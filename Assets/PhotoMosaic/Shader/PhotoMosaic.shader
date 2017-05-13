@@ -40,56 +40,73 @@ Shader "Hidden/PhotoMosaic"
     float4 _MainTex_TexelSize;
 
     float _BlockSize;
+    float _xPercent;
+    float _yPercent;
 
     sampler2D _AlbumTex;
     float4 _AlbumTex_TexelSize;
 
     sampler2D _LutTex;
 
+
+
     half4 frag(v2f_img i) : SV_Target
     {
-        // block size in the source texture space
-        float2 block_size = _MainTex_TexelSize.xy * _BlockSize;
-
-        // sample the source pixel with the downsampled uv coordinate
-        float2 uv_down = trunc(i.uv / block_size) * block_size;
-        half3 src = tex2D(_MainTex, uv_down).rgb;
+    	float4 position = i.pos;
+    	if (position.x > _xPercent * _ScreenParams.x &&
+    	position.y < _yPercent * _ScreenParams.y){
+        	// block size in the source texture space
+        	float2 block_size = _MainTex_TexelSize.xy * _BlockSize ;
+			
+        	// sample the source pixel with the downsampled uv coordinate
+        	float2 uv_down = trunc(i.uv / block_size) * block_size;
+        	half3 src = tex2D(_MainTex, uv_down).rgb;
 
 #if COLORSPACE_LINEAR
         src = LinearToGammaSpace(src);
 #endif
 
-        // 4-bit quantized blue component level
-        float src_b16 = floor(src.b * 16) / 16;
+        	// 4-bit quantized blue component level
+        	float src_b16 = floor(src.b * 16) / 16;
+			
+        	// select a photo with using the lut
+        	float2 lut_uv = float2(src.r / 16 + src_b16, src.g);
+        	float2 lut = tex2D(_LutTex, lut_uv).rg;
+			
+        	// repeat uv with the block size (including a small margin)
+        	float2 uv_block = frac(i.uv / block_size) * 0.94 + 0.03;
+			
+        	// get uv in the album texture
+        	float album_aspect = _AlbumTex_TexelSize.y * _AlbumTex_TexelSize.z;
+        	float2 uv_photo = uv_block * float2(1.0 / 16, album_aspect / 16);
+			
+        	half4 co = tex2D(_AlbumTex, lut + uv_photo);
 
-        // select a photo with using the lut
-        float2 lut_uv = float2(src.r / 16 + src_b16, src.g);
-        float2 lut = tex2D(_LutTex, lut_uv).rg;
-
-        // repeat uv with the block size (including a small margin)
-        float2 uv_block = frac(i.uv / block_size) * 0.94 + 0.03;
-
-        // get uv in the album texture
-        float album_aspect = _AlbumTex_TexelSize.y * _AlbumTex_TexelSize.z;
-        float2 uv_photo = uv_block * float2(1.0 / 16, album_aspect / 16);
-
-        half4 co = tex2D(_AlbumTex, lut + uv_photo);
+//        	co = half4(co.r, co.g, co.b, 240);
 #if COLORSPACE_LINEAR
-        co.rgb = GammaToLinearSpace(co.rgb);
+        	co.rgb = GammaToLinearSpace(co.rgb);
+//        co.rgb = (co.r,co.b,co.r);
 #endif
-        return co;
+    	    return co;
+    	}
+    	else{
+    		half4 co = tex2D(_MainTex, i.uv);
+    		return co;
+    	}
     }
 
     ENDCG
 
-    SubShader
+    SubShader 
+    // primarily used to implement shaders for different GPU capabilities
     {
         Pass
-        {
+        { //ZTest stops hidden pixels from being drawn
             ZTest Always Cull Off ZWrite Off
             CGPROGRAM
             #pragma vertex vert_img
             #pragma fragment frag
+
             ENDCG
         }
     }

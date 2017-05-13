@@ -30,7 +30,21 @@ public class PhotoMosaic : MonoBehaviour
     #region Public Properties
 
     [SerializeField]
-    float _blockSize = 32;
+    float _blockSize = 4;
+	float _x_percent = 0.5f;
+	float _y_percent = 1;
+
+	public void change_ypercent(float new_percent){
+		_y_percent = new_percent;
+	}
+
+	public void change_xpercent(float new_percent){
+		_x_percent = new_percent;
+	}
+
+	public void change_size(float new_size){
+		_blockSize = new_size * 10 + 2;
+	}
 
     public float blockSize
     {
@@ -39,10 +53,10 @@ public class PhotoMosaic : MonoBehaviour
     }
 
     [SerializeField]
-    Texture2D _albumTexture;
+    public Texture2D _albumTexture;
 
     [SerializeField]
-    Texture2D _lutTexture;
+    public Texture2D _lutTexture;
 
     #endregion
 
@@ -54,6 +68,15 @@ public class PhotoMosaic : MonoBehaviour
     #endregion
 
     #region MonoBehaviour Functions
+
+	public void UpdateTex (Texture2D album, Texture2D lut) {
+		_albumTexture = album;
+		_lutTexture = lut;
+		Debug.Log ("Update shader's property");
+	}
+
+	void Update(){
+	}
 
     void OnRenderImage(RenderTexture source, RenderTexture destination)
     {
@@ -72,6 +95,8 @@ public class PhotoMosaic : MonoBehaviour
             _material.DisableKeyword("COLORSPACE_LINEAR");
 
         _material.SetFloat("_BlockSize", blockSize);
+		_material.SetFloat("_xPercent", _x_percent);
+		_material.SetFloat("_yPercent", _y_percent);
         _material.SetTexture("_AlbumTex", _albumTexture);
         _material.SetTexture("_LutTex", _lutTexture);
 
