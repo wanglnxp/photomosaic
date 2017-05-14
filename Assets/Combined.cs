@@ -116,7 +116,7 @@ public class Combined : MonoBehaviour
 		album = ExportAndReturn(album, "AlbumTexture.png");
 		lut = ExportAndReturn(lut, "AlbumLut.png");
 //		ExportAndDestroy(lut, "AlbumLut.png");
-		PMscript.UpdateTex (album, lut);
+//		PMscript.UpdateTex (album, lut);
 //		BWscript.change (album);
 //		Object.DestroyImmediate(album);
 //		Object.DestroyImmediate(lut);

@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using PhotoMosaicEditor;
 
 public class WebCam : MonoBehaviour {
 	
@@ -10,7 +9,6 @@ public class WebCam : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		AlbumBuilder.UpdateAlbum ();
 		webCamTex = new WebCamTexture();
 		webCamTex.Play ();
 		GetComponent<Renderer> ().material.mainTexture = webCamTex;
